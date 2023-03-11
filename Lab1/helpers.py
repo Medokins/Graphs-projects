@@ -3,6 +3,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import random
 
+
 def read_data(filename, indexing=True):
     with open(filename) as f:
         lines = f.readlines()
@@ -97,7 +98,6 @@ def convert_from_adjacency_list_to_incidence(data):
     adjacency_matrix = convert_from_adjacency_list_to_adjacency_matrix(data)
     return convert_from_adjacency_matrix_to_incidence(adjacency_matrix)
 
-
 def generate_random_graph(n, l):
     if l > n * (n - 1) / 2:
         raise ValueError("Liczba krawędzi jest większa niż liczba krawędzi w grafie pełnym.")
@@ -113,7 +113,6 @@ def generate_random_graph(n, l):
             adj_matrix[v][u] = 1
     
     return adj_matrix
-
 
 def generate_random_graph_2(n, p):
     adj_matrix = [[0] * n for _ in range(n)]
