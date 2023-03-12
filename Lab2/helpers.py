@@ -88,7 +88,17 @@ def randomize_graph(sequence, num_iterations):
     return symmetric_matrix
 
 # Ad. 3
-def find_largest_connected_component(graph): #graph to dictionary (lista sasiedztwa) trzeba przerobic 
+def find_largest_connected_component(sequence): # graph to dictionary (lista sasiedztwa) trzeba przerobic 
+    adj_matrix = construct_graph(sequence)
+    adj_list = convert_from_adjacency_matrix_to_adjacency_list(adj_matrix)
+
+    keyList = range(1, len(adj_list) + 1)
+    graph = {}
+    
+    # iterating through the elements of list
+    for i in keyList:
+        graph[i] = adj_list[i-1]
+    
     visited = set()
     largest_component = []
     for v in graph:

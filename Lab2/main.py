@@ -10,6 +10,7 @@ non_graphical_sequance = [4, 4, 3, 1, 2]
 # print(f"Graphical: {is_graphical(graphical_sequance)}\nNon graphical: {is_graphical(non_graphical_sequance)}")
 
 adj_matrix = construct_graph(graphical_sequance)
-draw_graph(adj_matrix)
 randomized_graph = randomize_graph(graphical_sequance, 10)
-draw_graph(randomized_graph)
+
+draw_graph(adj_matrix)
+print(find_largest_connected_component(graphical_sequance))
