@@ -165,34 +165,42 @@ def edge_is_bridge(a, b, graph):
             dfs(graph, visited, v, component)
 
 # Ad. 5
-def generate_random_k_regular_graph(n,k):
-    if n*k % 2 != 0 and k>=n:
-        raise ValueError("The product of n and k must be even")
-    
-    # Create an empty adjacency matrix
-    adj_matrix = np.zeros((n,n), dtype=int)
-    
-    # Create a list of all possible edges
-    all_edges = [(i, j) for i in range(n) for j in range(i+1, n)]
-    
-    # Shuffle the list of edges
-    np.random.shuffle(all_edges)
-    
-    # Create a dictionary to keep track of the degree of each node
-    degree = {i: 0 for i in range(n)}
-    
-    # Loop over the shuffled list of edges until all nodes have degree k
-    for edge in all_edges:
-        if degree[edge[0]] < k and degree[edge[1]] < k:
-            adj_matrix[edge[0], edge[1]] = 1
-            adj_matrix[edge[1], edge[0]] = 1
-            degree[edge[0]] += 1
-            degree[edge[1]] += 1
-        
-        if all(d == k for d in degree.values()):
-            break
-    
-    return adj_matrix
+def generate_random_k_regular_graph(n, k):
+
+    num_tries = 100
+    # Sprawdzenie poprawności danych wejściowych
+    # Sprawdzenie poprawności danych wejściowych
+    if n <= k or (k % 2 == 1 and n % 2 == 1):
+        print("Błędne dane wejściowe!")
+        return None
+
+    # Inicjalizacja grafu pełnego
+    graph = np.zeros((n, n), dtype=int)
+
+    # Lista stopni wierzchołków
+    degrees = [0] * n
+
+    # Lista par wierzchołków, które nie sąsiadują ze sobą
+    pairs = [(i, j) for i in range(n) for j in range(i + 1, n)]
+
+    # Losowe wybieranie par wierzchołków, tak długo, jak stopnie wszystkich wierzchołków nie będą równe k
+    num_try = 0
+    while any(d != k for d in degrees):
+        pairs = [(i, j) for i in range(n) for j in range(i + 1, n)]
+        if num_try >= num_tries:
+
+            return generate_random_k_regular_graph(n, k)
+        random.shuffle(pairs)
+        for i, j in pairs:
+            if degrees[i] < k and degrees[j] < k and graph[i][j] == 0 and i != j:
+                graph[i][j] = graph[j][i] = 1
+                degrees[i] += 1
+                degrees[j] += 1
+                if all(d == k for d in degrees):
+                    return graph
+        num_try += 1
+
+    return graph
 
 # Ad. 6
 def Hamiltonian_path(adj, N):
