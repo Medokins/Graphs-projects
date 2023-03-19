@@ -13,7 +13,6 @@ graph = {'A': {'B': 2, 'C': 5},
 distances = dijkstra(graph, 'A')
 print(distances)
 show_graph(graph)
-# show_graph(graph)
 # Ad. 3
 # Ad. 4
 # Ad. 5
