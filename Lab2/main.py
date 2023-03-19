@@ -35,10 +35,13 @@ draw_graph(k_regular_graph)
 
 # Ad. 6
 hamiltonian_graph = [
-    [0, 1, 1],
-    [1, 0, 1],
-    [1, 1, 0]
+    [0, 1, 1, 1, 1],
+    [1, 0, 1, 1, 1],
+    [1, 1, 0, 1, 1],
+    [1, 1, 1, 0, 1],
+    [1, 1, 1, 1, 0]
 ]
+
 
 non_hamiltonian_graph = [
     [0,  1,  1,  0,  0],
@@ -49,4 +52,7 @@ non_hamiltonian_graph = [
 ]
 # not working yet
 print("\nAd. 6")
-print("YES") if (Hamiltonian_path(non_hamiltonian_graph, len(non_hamiltonian_graph))) else print("NO")
+# Driver Code
+
+V = 5
+hamCycle(non_hamiltonian_graph, V)
