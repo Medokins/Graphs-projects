@@ -3,21 +3,33 @@ import matplotlib.pyplot as plt
 import heapq
 
 def dijkstra(graph, start):
-    distances = {vertex: float('infinity') for vertex in graph}
-    distances[start] = 0
-    pq = [(0, start)]
+    # Initialize the distance of all nodes as infinity
+    dist = {node: float('inf') for node in graph}
+    # Set the distance of the starting node as 0
+    dist[start] = 0
+    # Initialize the heap with the starting node and its distance
+    heap = [(0, start)]
+    # Initialize the visited set
     visited = set()
-    while pq:
-        (current_distance, current_vertex) = heapq.heappop(pq)
-        if current_vertex in visited:
+
+    while heap:
+        # Pop the node with the minimum distance from the heap
+        (min_dist, node) = heapq.heappop(heap)
+        # If the node has already been visited, continue
+        if node in visited:
             continue
-        visited.add(current_vertex)
-        for neighbor, weight in graph[current_vertex].items():
-            distance = current_distance + weight
-            if distance < distances[neighbor]:
-                distances[neighbor] = distance
-                heapq.heappush(pq, (distance, neighbor))
-    return distances
+        # Add the node to the visited set
+        visited.add(node)
+        # Update the distance of all unvisited neighbors of the node
+        for neighbor, weight in graph[node].items():
+            if neighbor not in visited:
+                new_dist = dist[node] + weight
+                if new_dist < dist[neighbor]:
+                    dist[neighbor] = new_dist
+                    heapq.heappush(heap, (new_dist, neighbor))
+
+    # Return the distance of all nodes from the starting node
+    return dist
 
 def show_graph(graph):
     G = nx.Graph()
