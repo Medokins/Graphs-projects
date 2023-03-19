@@ -203,45 +203,50 @@ def generate_random_k_regular_graph(n, k):
     return graph
 
 # Ad. 6
-def Hamiltonian_path(adj, N):
-     
-    dp = [[False for i in range(1 << N)]
-                 for j in range(N)]
- 
-    # Set all dp[i][(1 << i)] to
-    # true
-    for i in range(N):
-        dp[i][1 << i] = True
- 
-    # Iterate over each subset
-    # of nodes
-    for i in range(1 << N):
-        for j in range(N):
- 
-            # If the jth nodes is included
-            # in the current subset
-            if ((i & (1 << j)) != 0):
- 
-                # Find K, neighbour of j
-                # also present in the
-                # current subset
-                for k in range(N):
-                    if ((i & (1 << k)) != 0 and
-                             adj[k][j] == 1 and
-                                     j != k and
-                          dp[k][i ^ (1 << j)]):
-                         
-                        # Update dp[j][i]
-                        # to true
-                        dp[j][i] = True
-                        break
-     
-    # Traverse the vertices
-    for i in range(N):
- 
-        # Hamiltonian Path exists
-        if (dp[i][(1 << N) - 1]):
+def isSafe(graph, v, pos, path):
+    if graph[path[pos-1]][v] == 0:
+        return False
+
+    for vertex in path:
+        if vertex == v:
+            return False
+
+    return True
+
+
+def hamCycleUtil(graph, path, pos, V):
+    if pos == V:
+        if graph[path[pos-1]][path[0]] == 1:
             return True
- 
-    # Otherwise, return false
+        else:
+            return False
+
+    for v in range(1, V):
+        if isSafe(graph, v, pos, path):
+            path[pos] = v
+
+            if hamCycleUtil(graph, path, pos+1, V):
+                return True
+
+            path[pos] = -1
+
     return False
+
+
+def hamCycle(graph, V):
+    path = [-1] * V
+    path[0] = 0
+
+    if hamCycleUtil(graph, path, 1, V) == False:
+        print("Solution does not exist\n")
+        return False
+
+    printSolution(path)
+    return True
+
+
+def printSolution(path):
+    print("Solution Exists: Following is one Hamiltonian Cycle")
+    for vertex in path:
+        print(vertex, end=" ")
+    print(path[0], "\n")
