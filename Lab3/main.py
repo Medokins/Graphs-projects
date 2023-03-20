@@ -1,4 +1,4 @@
-from helpers import dijkstra, show_graph
+from helpers import *
 
 # Ad. 1
 
@@ -20,20 +20,28 @@ weights = [
     [float('inf'),  float('inf'),   3,           2,              0      ]  # 4
 ]
 
-start_vertex = 0
-lengths, predecessors = dijkstra(graph, weights, start_vertex)
+# start_vertex = 0
+# lengths, predecessors = dijkstra(graph, weights, start_vertex)
 
-for predecessor in predecessors:
-    print(predecessor, end=" ")
-    if predecessor != predecessors[-1]:
-        print("->", end=" ")
+# for predecessor in predecessors:
+#     print(predecessor, end=" ")
+#     if predecessor != predecessors[-1]:
+#         print("->", end=" ")
+# print("")
+# for i, length in enumerate(lengths):
+#     print(f"Shorest path from node {start_vertex} to node {i} has a length of {length}")
 
-for i, length in enumerate(lengths):
-    print(f"Shorest path from node {start_vertex} to node {i} has a length of {length}")
+# show_graph(graph, weights)
 
-show_graph(graph, weights)
 # Ad. 3
+lengths_matrix = all_pairs_shortest_paths(graph, weights)
+df = create_full_matrix(lengths_matrix)
+center = center_of_graph(df)
+print(f"Center: {center}, ", end="")
 
-# Ad. 4
+# Ad. 4 
+minimax = center_of_graph_minimax(df)
+print(f"Minmax: {minimax}")
+
 # Ad. 5
 # Ad. 6
