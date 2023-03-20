@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 
 # Ad. 2
-=======
 def relax(u, v, weights, lengths, predecessors):
     if lengths[v] > lengths[u] + weights[u][v]:
         lengths[v] = lengths[u] + weights[u][v]
