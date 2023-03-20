@@ -1,6 +1,7 @@
-from helpers import dijkstra, show_graph
+from helpers import *
 
 # Ad. 1
+
 # Ad. 2
 graph = [    
     [1, 2],         # 0
@@ -33,6 +34,14 @@ for i, length in enumerate(lengths):
 show_graph(graph, weights)
 
 # Ad. 3
-# Ad. 4
+lengths_matrix = all_pairs_shortest_paths(graph, weights)
+df = create_full_matrix(lengths_matrix)
+center = center_of_graph(df)
+print(f"Center: {center}, ", end="")
+
+# Ad. 4 
+minimax = center_of_graph_minimax(df)
+print(f"Minmax: {minimax}")
+
 # Ad. 5
 # Ad. 6

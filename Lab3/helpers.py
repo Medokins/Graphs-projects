@@ -1,6 +1,10 @@
 import networkx as nx
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
+# Ad. 2
+=======
 def relax(u, v, weights, lengths, predecessors):
     if lengths[v] > lengths[u] + weights[u][v]:
         lengths[v] = lengths[u] + weights[u][v]
@@ -53,6 +57,38 @@ def show_graph(graph, weights) -> None:
     # Dodanie wag do krawędzi
     labels = nx.get_edge_attributes(G, 'weight')
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
-
     # Wyświetlenie grafu
     plt.show()
+
+# Ad. 3
+def all_pairs_shortest_paths(graph, weights):
+    n = len(graph)
+    distances = [[float('inf') for _ in range(n)] for _ in range(n)]
+
+    for vertex in range(n):
+        lengths, _ = dijkstra(graph, weights, vertex)
+        distances[vertex] = lengths
+
+    return distances
+
+# Ad. 4
+def create_full_matrix(distances) -> pd.DataFrame:
+    for row in distances:
+        row.append(np.sum(row))
+        row.append(np.max(row[:-1]))
+    df = pd.DataFrame(distances)
+    df = df.rename(columns={5: 'summ', 6: 'length from furthest'})
+    print(df)
+    return df
+
+def center_of_graph(distances_df: pd.DataFrame) -> int:
+    max = np.max(distances_df["summ"])
+    for i, value in enumerate(distances_df['summ']):
+        if value == max:
+            return i
+
+def center_of_graph_minimax(distances_df: pd.DataFrame) -> int:
+    min = np.min(distances_df["length from furthest"])
+    for i, value in enumerate(distances_df['length from furthest']):
+        if value == min:
+            return i
