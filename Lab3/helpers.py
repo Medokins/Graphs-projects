@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 # Ad. 2
+=======
 def relax(u, v, weights, lengths, predecessors):
     if lengths[v] > lengths[u] + weights[u][v]:
         lengths[v] = lengths[u] + weights[u][v]
@@ -56,7 +57,6 @@ def show_graph(graph, weights) -> None:
     # Dodanie wag do krawędzi
     labels = nx.get_edge_attributes(G, 'weight')
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
-
     # Wyświetlenie grafu
     plt.show()
 

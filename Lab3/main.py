@@ -20,18 +20,18 @@ weights = [
     [float('inf'),  float('inf'),   3,           2,              0      ]  # 4
 ]
 
-# start_vertex = 0
-# lengths, predecessors = dijkstra(graph, weights, start_vertex)
+start_vertex = 0
+lengths, predecessors = dijkstra(graph, weights, start_vertex)
 
-# for predecessor in predecessors:
-#     print(predecessor, end=" ")
-#     if predecessor != predecessors[-1]:
-#         print("->", end=" ")
-# print("")
-# for i, length in enumerate(lengths):
-#     print(f"Shorest path from node {start_vertex} to node {i} has a length of {length}")
+for predecessor in predecessors:
+    print(predecessor, end=" ")
+    if predecessor != predecessors[-1]:
+        print("->", end=" ")
 
-# show_graph(graph, weights)
+for i, length in enumerate(lengths):
+    print(f"Shorest path from node {start_vertex} to node {i} has a length of {length}")
+
+show_graph(graph, weights)
 
 # Ad. 3
 lengths_matrix = all_pairs_shortest_paths(graph, weights)
