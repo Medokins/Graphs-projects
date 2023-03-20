@@ -1,46 +1,58 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import heapq
 
-def dijkstra(graph, start):
-    distances = {vertex: float('infinity') for vertex in graph}
-    distances[start] = 0
-    pq = [(0, start)]
-    visited = set()
-    while pq:
-        (current_distance, current_vertex) = heapq.heappop(pq)
-        if current_vertex in visited:
-            continue
-        visited.add(current_vertex)
-        for neighbor, weight in graph[current_vertex].items():
-            distance = current_distance + weight
-            if distance < distances[neighbor]:
-                distances[neighbor] = distance
-                heapq.heappush(pq, (distance, neighbor))
-    return distances
+def relax(u, v, weights, lengths, predecessors):
+    if lengths[v] > lengths[u] + weights[u][v]:
+        lengths[v] = lengths[u] + weights[u][v]
+    predecessors[v] = u
 
-def show_graph(graph):
+def dijkstra(graph, weights, vertexId):
+    n = len(graph)
+    lengths = [float('inf') for _ in range(n)]
+    predecessors = [None for _ in range(n)]
+    lengths[vertexId] = 0
+    S = set()
+
+    adjacencyList = [[] for _ in range(n)]
+    for u, neighbors in enumerate(graph):
+        for v in neighbors:
+            adjacencyList[u].append(v)
+
+    vertexList = [v for v in range(n)]
+
+    while len(S) != n:
+        u = min((v for v in vertexList if v not in S), key=lambda v: lengths[v])
+        S.add(u)
+        for v in adjacencyList[u]:
+            if v not in S:
+                relax(u, v, weights, lengths, predecessors)
+
+    return lengths, predecessors
+
+def show_graph(graph, weights) -> None:
     G = nx.Graph()
 
-    # Dodaj wierzchołki do grafu
-    for vertex in graph.keys():
-        G.add_node(vertex)
+    # Dodanie wierzchołków do grafu
+    for i in range(len(graph)):
+        G.add_node(i)
 
-    # Dodaj krawędzie do grafu
-    for vertex, neighbors in graph.items():
-        for neighbor, weight in neighbors.items():
-            G.add_edge(vertex, neighbor, weight=weight)
+    # Dodanie krawędzi i wag do grafu
+    for i in range(len(graph)):
+        for j in range(len(graph[i])):
+            if weights[i][j] != float('inf'):
+                G.add_edge(i, graph[i][j], weight=weights[i][graph[i][j]])
 
-    # Ustaw pozycje wierzchołków
-    pos = nx.spring_layout(G)
+    # Ustawienie pozycji wierzchołków
+    pos = nx.circular_layout(G)
 
-    # Narysuj wierzchołki, krawędzie i wagi krawędzi
-    nx.draw_networkx_nodes(G, pos, node_color='lightblue', node_size=800)
-    nx.draw_networkx_edges(G, pos, edge_color='gray', width=2)
-    nx.draw_networkx_labels(G, pos, font_size=20, font_family='sans-serif')
+    # Rysowanie grafu
+    nx.draw_networkx_nodes(G, pos)
+    nx.draw_networkx_edges(G, pos)
+    nx.draw_networkx_labels(G, pos)
+
+    # Dodanie wag do krawędzi
     labels = nx.get_edge_attributes(G, 'weight')
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, font_size=16)
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
 
-    # Wyświetl graf
-    plt.axis('off')
+    # Wyświetlenie grafu
     plt.show()
