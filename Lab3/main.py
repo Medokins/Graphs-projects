@@ -1,25 +1,39 @@
-from helpers import show_graph, dijkstra
+from helpers import dijkstra, show_graph
 
 # Ad. 1
+
 # Ad. 2
-graph = {'A': {'B': 2, 'C': 5},
-         'B': {'C': 1, 'D': 3},
-         'C': {'D': 2, 'E': 4},
-         'D': {'E': 1},
-         'E': {'A': 1},
-         'F': {'B': 3, 'D': 5}
-         }
+graph = [    
+    [1, 2],         # 0
+    [0, 2, 3],      # 1
+    [0, 1, 3, 4],   # 2
+    [1, 2, 4],      # 3
+    [3, 2]          # 4
+]
 
-start = 'A'
-distances = dijkstra(graph, start)
+weights = [
+    #       0             1         2            3               4
+    [       0,            1,        4,      float('inf'),   float('inf')], # 0
+    [       1,            0,        2,           5,         float('inf')], # 1
+    [       4,            2,        0,           1,              3      ], # 2
+    [float('inf'),        5,        1,           0,              2      ], # 3
+    [float('inf'),  float('inf'),   3,           2,              0      ]  # 4
+]
 
-# Print the shortest distance from the starting node to all other nodes
-for node, distance in distances.items():
-    print(f"Shortest distance from {start} to {node}: {distance}")
+start_vertex = 0
+lengths, predecessors = dijkstra(graph, weights, start_vertex)
 
-show_graph(graph)
+for predecessor in predecessors:
+    print(predecessor, end=" ")
+    if predecessor != predecessors[-1]:
+        print("->", end=" ")
 
+for i, length in enumerate(lengths):
+    print(f"Shorest path from node {start_vertex} to node {i} has a length of {length}")
+
+show_graph(graph, weights)
 # Ad. 3
+
 # Ad. 4
 # Ad. 5
 # Ad. 6
