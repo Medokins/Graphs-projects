@@ -1,6 +1,9 @@
 from helpers import *
+from Lab1.helpers import convert_from_adjacency_matrix_to_adjacency_list
 
 # Ad. 1
+adj_matrix, weight_matrix = makeRandomWeightGraph(10, 0.2, 1, 10)
+show_graph(convert_adj_list_from_1_to_0_start(convert_from_adjacency_matrix_to_adjacency_list(adj_matrix)), weight_matrix)
 
 # Ad. 2
 graph = [    

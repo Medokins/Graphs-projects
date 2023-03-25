@@ -3,6 +3,36 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+import sys
+sys.path.append("./") # for running from root
+sys.path.append("..") # for running from curent directory
+from Lab2.helpers import *
+
+# Ad. 1
+def convert_adj_list_from_1_to_0_start(adjacency_list):
+    for i in range(len(adjacency_list)):
+        for j in range(len(adjacency_list[i])):
+            adjacency_list[i][j] -= 1
+    return adjacency_list
+
+def makeRandomWeightGraph(num_of_vertexes, edge_probability, min_weight, max_weight):
+    adj_matrix = np.zeros((num_of_vertexes, num_of_vertexes))
+    while len(find_largest_connected_component(adj_matrix)) != num_of_vertexes:
+        adj_matrix = np.zeros((num_of_vertexes, num_of_vertexes))
+        for i in range(num_of_vertexes):
+            for j in range(i+1, num_of_vertexes):
+                if np.random.random() < edge_probability:
+                    adj_matrix[i][j] = adj_matrix[j][i] = 1
+    
+    weight_matrix = np.full((num_of_vertexes, num_of_vertexes), float('inf'))
+    for i in range(num_of_vertexes):
+        weight_matrix[i][i] = 0
+        for j in range(i, num_of_vertexes):
+            if adj_matrix[i][j] == 1:
+                weight_matrix[i][j] = weight_matrix[j][i] = np.random.randint(min_weight, max_weight+1)
+    
+    return adj_matrix, weight_matrix
+
 # Ad. 2
 def relax(u, v, weights, lengths, predecessors):
     if lengths[v] > lengths[u] + weights[u][v]:
@@ -42,8 +72,7 @@ def show_graph(graph, weights) -> None:
     # Dodanie krawędzi i wag do grafu
     for i in range(len(graph)):
         for j in range(len(graph[i])):
-            if weights[i][j] != float('inf'):
-                G.add_edge(i, graph[i][j], weight=weights[i][graph[i][j]])
+            G.add_edge(i, graph[i][j], weight=weights[i][graph[i][j]])
 
     # Ustawienie pozycji wierzchołków
     pos = nx.circular_layout(G)
@@ -81,9 +110,9 @@ def create_full_matrix(distances) -> pd.DataFrame:
     return df
 
 def center_of_graph(distances_df: pd.DataFrame) -> int:
-    max = np.max(distances_df["summ"])
+    minSum = np.min(distances_df["summ"])
     for i, value in enumerate(distances_df['summ']):
-        if value == max:
+        if value == minSum:
             return i
 
 def center_of_graph_minimax(distances_df: pd.DataFrame) -> int:
