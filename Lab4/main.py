@@ -13,6 +13,7 @@ showDigraf(randomDigrafAdjMatrix)
 # Ad. 2
 G = {0: [1], 1: [2], 2: [0, 3], 3: []}
 print(kosaraju(G))
+
 # Ad. 3
 
 # Ad. 4
