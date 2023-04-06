@@ -2,6 +2,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import heapq
+from typing import List,Tuple
 
 import sys
 sys.path.append("./") # for running from root
@@ -120,3 +122,30 @@ def center_of_graph_minimax(distances_df: pd.DataFrame) -> int:
     for i, value in enumerate(distances_df['length from furthest']):
         if value == min:
             return i
+
+
+# Ad. 5
+import heapq
+from typing import List
+
+def prim(graph: List[List[int]], weights: List[List[float]]) -> Tuple[List[List[float]], List[List[float]]]:
+    n = len(graph)
+    mst = [[0] * n for _ in range(n)]
+    mst_weights = [[float('inf')] * n for _ in range(n)]
+    visited = [False] * n
+    pq = [(0, 0, None)]  # (weight, vertex, parent)
+
+    while pq:
+        w, v, parent = heapq.heappop(pq)
+        if visited[v]:
+            continue
+        visited[v] = True
+        if parent is not None:
+            mst[v][parent] = mst[parent][v] = w
+            mst_weights[v][parent] = mst_weights[parent][v] = weights[v][parent]
+
+        for u, weight in enumerate(weights[v]):
+            if weight != float('inf') and not visited[u]:
+                heapq.heappush(pq, (weight, u, v))
+
+    return mst, mst_weights

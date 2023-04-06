@@ -1,4 +1,5 @@
 from helpers import *
+
 from Lab1.helpers import convert_from_adjacency_matrix_to_adjacency_list
 
 # Ad. 1
@@ -47,4 +48,8 @@ minimax = center_of_graph_minimax(df)
 print(f"Minmax: {minimax}")
 
 # Ad. 5
+mst,we=prim(adj_matrix, weight_matrix)
+
+show_graph(convert_adj_list_from_1_to_0_start(convert_from_adjacency_matrix_to_adjacency_list(mst)), we)
+
 # Ad. 6
