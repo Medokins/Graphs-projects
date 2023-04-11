@@ -1,19 +1,32 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 
 # Ad. 1
-def makeRandomDigraf(num_of_vertexes, edge_probability):
-    adj_matrix = np.zeros((num_of_vertexes, num_of_vertexes))
-    for i in range(num_of_vertexes):
-        for j in range(i+1, num_of_vertexes):
-            if np.random.random() < edge_probability:
-                if np.random.randint(2) == 0:
-                    adj_matrix[i][j] = 1
-                else:
-                    adj_matrix[j][i] = 1
+def generateDigraph(node_count, probability):
+    if probability < 0 or probability > 1:
+        sys.exit("Wrong randomization arguments")
 
-    return adj_matrix
+    edges = []
+
+    while True:
+        for i in range(0, node_count):
+            for j in range(0, node_count):
+                if i != j:
+                    rand = np.random.rand()
+
+                    if rand < probability:
+                        edges.append([i, j])
+
+        maxList = map(max, edges)
+        maxNode = max(maxList, default=-1)
+
+        if maxNode == node_count - 1:
+            break
+
+        edges = []
+    return convert_to_adjacency_matrix(edges)
 
 def showDigraf(adj_matrix, weights = None):
     G = nx.DiGraph()
@@ -48,58 +61,64 @@ def showDigraf(adj_matrix, weights = None):
 
 
 # Ad. 2
-def transpose_graph(G):
-    n = len(G)
-    transposed_graph = [[] for _ in range(n)]
-    for v in range(n):
-        for u in G[v]:
-            transposed_graph[u].append(v)
-    return transposed_graph
 
-def kosaraju(G):
-    n = len(G)
-    d = [-1] * n
-    f = [-1] * n
-    t = 0
-
-    for v in range(n):
-        if d[v] == -1:
-            t = DFS_visit(v, G, d, f, t)
-
-    # tworzenie grafu transponowanego
-    GT = transpose_graph(G)
-
-    nr = 0
-    comp = [-1] * n
-
-    for v in sorted(range(n), key=lambda x: f[x], reverse=True):
-        if comp[v] == -1:
-            nr += 1
-            comp[v] = nr
-            components_r(nr, v, GT, comp)
-
-    return comp
+def dfs(graph, visited, stack, node):
+    visited[node] = True
+    for i in range(len(graph)):
+        if graph[node][i] == 1 and not visited[i]:
+            dfs(graph, visited, stack, i)
+    stack.append(node)
 
 
-def DFS_visit(v, G, d, f, t):
-    t += 1
-    d[v] = t
-
-    for u in G[v]:
-        if d[u] == -1:
-            t = DFS_visit(u, G, d, f, t)
-
-    t += 1
-    f[v] = t
-    return t
+def transpose(graph):
+    return [list(row) for row in zip(*graph)]
 
 
-def components_r(nr, v, GT, comp):
-    for u in GT[v]:
-        if comp[u] == -1:
-            comp[u] = nr
-            components_r(nr, u, GT, comp)
+def kosaraju(adjacency_matrix):
+    n = len(adjacency_matrix)
+
+    # Check if the adjacency matrix is square
+    if n != len(adjacency_matrix[0]):
+        raise ValueError("Input adjacency matrix is not square")
+
+    # Step 1: Perform depth-first search to fill the stack
+    visited = [False] * n
+    stack = []
+    for i in range(n):
+        if not visited[i]:
+            dfs(adjacency_matrix, visited, stack, i)
+
+    # Step 2: Transpose the adjacency matrix
+    transposed_matrix = transpose(adjacency_matrix)
+
+    # Step 3: Perform depth-first search on the transposed graph to find strongly connected components
+    visited = [False] * n
+    strongly_connected_components = []
+    while stack:
+        node = stack.pop()
+        if not visited[node]:
+            component = []
+            dfs(transposed_matrix, visited, component, node)
+            strongly_connected_components.append(component)
+
+    return strongly_connected_components
+
 
 # Ad. 3
+
+def convert_to_adjacency_matrix(edges):
+    # Find the highest node number in the list of edges
+    max_node = max(max(edge) for edge in edges)
+
+    # Initialize a matrix filled with zeros
+    adjacency_matrix = [[0] * (max_node + 1) for _ in range(max_node + 1)]
+
+    # Set the values in the adjacency matrix based on the edges
+    for edge in edges:
+        adjacency_matrix[edge[0]][edge[1]] = 1
+
+    return adjacency_matrix
+
+
 
 # Ad. 4
