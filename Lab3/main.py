@@ -18,20 +18,21 @@ graph = [
 
 weights = [
     #       0             1         2            3               4
-    [       0,            1,        4,      float('inf'),   float('inf')], # 0
-    [       1,            0,        2,           5,         float('inf')], # 1
-    [       4,            2,        0,           1,              3      ], # 2
+    [       0,            20,        4,      float('inf'),   float('inf')], # 0
+    [       20,            0,        15,           5,         float('inf')], # 1
+    [       4,            15,       0,           1,              3      ], # 2
     [float('inf'),        5,        1,           0,              2      ], # 3
     [float('inf'),  float('inf'),   3,           2,              0      ]  # 4
 ]
 
 start_vertex = 0
 lengths, predecessors = dijkstra(graph, weights, start_vertex)
+print(predecessors)
 
-for predecessor in predecessors[1:]:
-    print(predecessor, end=" ")
-    if predecessor != predecessors[-1]:
-        print("->", end=" ")
+# for predecessor in predecessors:
+#     print(predecessor, end=" ")
+#     if predecessor != predecessors[-1]:
+#         print("->", end=" ")
 
 for i, length in enumerate(lengths):
     print(f"Shortest path from node {start_vertex} to node {i} has a length of {length}")

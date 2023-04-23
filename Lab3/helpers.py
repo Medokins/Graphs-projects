@@ -39,7 +39,7 @@ def makeRandomWeightGraph(num_of_vertexes, edge_probability, min_weight, max_wei
 def relax(u, v, weights, lengths, predecessors):
     if lengths[v] > lengths[u] + weights[u][v]:
         lengths[v] = lengths[u] + weights[u][v]
-    predecessors[v] = u
+        predecessors[v] = u
 
 def dijkstra(graph, weights, vertexId):
     n = len(graph)
