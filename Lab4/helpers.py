@@ -132,23 +132,6 @@ def convert_to_edges(adjacency_matrix):
                 edges.append([i, j])
     return edges
 
-def bellman_ford(edges_list, edgesValues, s): # todo sparafrazowac w chatgpt bo zajebane
-    edgesLen = len(edges_list)
-    distance = [np.inf for _ in range(edgesLen)]
-    distance[s] = 0
-
-    for _ in range(edgesLen - 1):
-        for i in range(len(edges_list)):
-            if distance[edges_list[i][1]] > distance[edges_list[i][0]] + edgesValues[i]:
-                distance[edges_list[i][1]] = distance[edges_list[i][0]] + edgesValues[i]
-
-    for i in range(len(edges_list)):
-        if distance[edges_list[i][1]] > distance[edges_list[i][0]] + edgesValues[i]:
-            print("Graph contains negative cycle")
-            return False
-
-    return distance
-
 def convertEdgesToNeighborList(edges_list):
 
     neighbor_dict = {}
@@ -168,6 +151,23 @@ def convertEdgesToNeighborList(edges_list):
 
     return neighbor_list
 
+def bellman_ford(edges, values, start):
+    n = len(edges)
+    dist = np.full(n, np.inf)
+    dist[start] = 0
+
+    for i in range(n-1):
+        for j, (u, v) in enumerate(edges):
+            if dist[u] + values[j] < dist[v]:
+                dist[v] = dist[u] + values[j]
+
+    for j, (u, v) in enumerate(edges):
+        if dist[u] + values[j] < dist[v]:
+            print("Negative cycle detected in graph")
+            return False
+
+    return dist
+
 def add_s(edges_list, edgesValues, nodesCount):
     edgesLen = len(edges_list)
     G_prim = copy.deepcopy(edges_list)
@@ -183,7 +183,7 @@ def johnson(edges_list, edgesValues, nodesCount):
 
     d = bellman_ford(G_prim_edges, G_prim_edgesValues, nodesCount)
 
-    if d == False:
+    if d.all():
         return False
 
     h = copy.deepcopy(d)
@@ -200,4 +200,5 @@ def johnson(edges_list, edgesValues, nodesCount):
     D = [ [d_prim[i][j] + h[j] - h[i] for j in range(nodesCount)] for i in range(nodesCount) ]
 
     return D
+
 # Ad. 4

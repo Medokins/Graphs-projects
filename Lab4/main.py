@@ -21,14 +21,14 @@ while True:
     randomGraph = generateDigraph(size, 0.8)
     showDigraf(randomGraph)
     isStronglyConnectedGraph = kosaraju(randomGraph)
-    print(isStronglyConnectedGraph)
+
     if len(isStronglyConnectedGraph) == 1:
         convertedToEdgesList = convert_to_edges(randomGraph)
 
-        edgesValues = [np.random.randint(-5, 10) for _ in range(len(convertedToEdgesList))]
+        edgesValues = [np.random.randint(-1, 10) for _ in range(len(convertedToEdgesList))]
 
         res = bellman_ford(convertedToEdgesList, edgesValues, 2)
-        if res:
+        if type(res) is not bool:
             print(res[:size])
 
         break
@@ -41,7 +41,7 @@ while True:
     randomGraph = generateDigraph(size, 0.8)
     showDigraf(randomGraph)
     isStronglyConnectedGraph = kosaraju(randomGraph)
-    print(isStronglyConnectedGraph)
+
     if len(isStronglyConnectedGraph) == 1:
         convertedToEdgesList = convert_to_edges(randomGraph)
         edgesValues = [np.random.randint(-1, 10) for _ in range(len(convertedToEdgesList))]
