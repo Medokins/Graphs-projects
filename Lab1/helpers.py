@@ -3,25 +3,25 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import random
 
-
 def read_data(filename, indexing=True):
     with open(filename) as f:
         lines = f.readlines()
 
     data = []
     for line in lines:
-        if indexing:
-            arr = line.split()[1:]
-            data.append([int(val) for val in arr])
-        else:
-            arr = line.split()[1:]
-            data.append([int(val) for val in arr])
+        arr = line.split()[1:]
+        data.append([int(val) for val in arr])
 
     return data
 
 def print_data(data):
     for row in data:
         print(row)
+    print()
+
+def print_adj_list(data):
+    for i in range(len(data)):
+        print(f'{i+1}: {data[i]}')
     print()
 
 def draw_graph(data, type="adjacency_matrix"):
@@ -39,6 +39,7 @@ def draw_graph(data, type="adjacency_matrix"):
     nx.draw_circular(G2, with_labels = True)
     plt.axis('equal')
     plt.show()
+    plt.clf()
 
 def convert_from_adjacency_matrix_to_incidence(data):
     incidence_matrix = []
