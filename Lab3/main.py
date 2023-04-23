@@ -1,12 +1,13 @@
 from helpers import *
-
 from Lab1.helpers import convert_from_adjacency_matrix_to_adjacency_list
 
 # Ad. 1
+print("Ad. 1")
 adj_matrix, weight_matrix = makeRandomWeightGraph(10, 0.2, 1, 10)
 show_graph(convert_adj_list_from_1_to_0_start(convert_from_adjacency_matrix_to_adjacency_list(adj_matrix)), weight_matrix)
 
 # Ad. 2
+print("\nAd. 2")
 graph = [    
     [1, 2],         # 0
     [0, 2, 3],      # 1
@@ -27,29 +28,30 @@ weights = [
 start_vertex = 0
 lengths, predecessors = dijkstra(graph, weights, start_vertex)
 
-for predecessor in predecessors:
+for predecessor in predecessors[1:]:
     print(predecessor, end=" ")
     if predecessor != predecessors[-1]:
         print("->", end=" ")
 
 for i, length in enumerate(lengths):
-    print(f"Shorest path from node {start_vertex} to node {i} has a length of {length}")
+    print(f"Shortest path from node {start_vertex} to node {i} has a length of {length}")
 
 show_graph(graph, weights)
 
 # Ad. 3
+print("\nAd. 3")
 lengths_matrix = all_pairs_shortest_paths(graph, weights)
 df = create_full_matrix(lengths_matrix)
 center = center_of_graph(df)
-print(f"Center: {center}, ", end="")
+print(f"Center: {center}")
+show_graph(graph, weights)
 
 # Ad. 4 
+print("\nAd. 4")
 minimax = center_of_graph_minimax(df)
 print(f"Minmax: {minimax}")
 
 # Ad. 5
-mst,we=prim(adj_matrix, weight_matrix)
-
+print("\nAd. 5")
+mst, we = prim(adj_matrix, weight_matrix)
 show_graph(convert_adj_list_from_1_to_0_start(convert_from_adjacency_matrix_to_adjacency_list(mst)), we)
-
-# Ad. 6
