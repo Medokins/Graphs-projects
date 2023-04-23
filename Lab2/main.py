@@ -44,6 +44,7 @@ print("\nAd. 5\nk_regular_graph")
 draw_graph(k_regular_graph)
 
 # Ad. 6
+print("\nAd. 6")
 hamiltonian_graph = [
     [0, 1, 1, 1, 1],
     [1, 0, 1, 1, 1],
@@ -60,9 +61,6 @@ non_hamiltonian_graph = [
     [0,  1 , 1,  0 , 1],
     [0 , 0 , 0,  1,  0]
 ]
-# not working yet
-print("\nAd. 6")
-# Driver Code
-
 V = 5
+hamCycle(hamiltonian_graph, V)
 hamCycle(non_hamiltonian_graph, V)
