@@ -27,12 +27,16 @@ weights = [
 
 start_vertex = 0
 lengths, predecessors = dijkstra(graph, weights, start_vertex)
-print(predecessors)
 
-# for predecessor in predecessors:
-#     print(predecessor, end=" ")
-#     if predecessor != predecessors[-1]:
-#         print("->", end=" ")
+paths = reconstruct_paths(predecessors, start_vertex)
+for end_vertex, path in enumerate(paths):
+    print(f"Shortest path from {start_vertex} to {end_vertex}: ")
+    for node in path:
+        if node != path[-1]:
+            print(node, end=" -> ")
+        else:
+            print(node)
+    print("")
 
 for i, length in enumerate(lengths):
     print(f"Shortest path from node {start_vertex} to node {i} has a length of {length}")

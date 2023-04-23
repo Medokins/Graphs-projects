@@ -90,6 +90,19 @@ def show_graph(graph, weights) -> None:
     # Wyświetlenie grafu
     plt.show()
 
+def reconstruct_paths(ps, s):
+    paths = [[] for _ in range(len(ps))]
+    for i in range(len(ps)):
+        if i == s:
+            continue
+        path = [i]
+        predecessor = ps[i]
+        while predecessor is not None:
+            path.insert(0, predecessor)
+            predecessor = ps[predecessor]
+        paths[i] = path
+    return paths
+
 # Ad. 3
 def all_pairs_shortest_paths(graph, weights):
     n = len(graph)
