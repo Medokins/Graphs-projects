@@ -7,6 +7,7 @@ adj_matrix, weight_matrix = makeRandomWeightGraph(10, 0.2, 1, 10)
 show_graph(convert_adj_list_from_1_to_0_start(convert_from_adjacency_matrix_to_adjacency_list(adj_matrix)), weight_matrix)
 
 # Ad. 2
+# TODO use graph generated in Ad. 1, iterate it's indexes down by 1
 print("\nAd. 2")
 graph = [    
     [1, 2],         # 0
