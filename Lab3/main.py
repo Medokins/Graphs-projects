@@ -7,27 +7,29 @@ adj_matrix, weight_matrix = makeRandomWeightGraph(10, 0.2, 1, 10)
 show_graph(convert_adj_list_from_1_to_0_start(convert_from_adjacency_matrix_to_adjacency_list(adj_matrix)), weight_matrix)
 
 # Ad. 2
-# TODO use graph generated in Ad. 1, iterate it's indexes down by 1
 print("\nAd. 2")
-graph = [    
-    [1, 2],         # 0
-    [0, 2, 3],      # 1
-    [0, 1, 3, 4],   # 2
-    [1, 2, 4],      # 3
-    [3, 2]          # 4
-]
+temp_adj_list = convert_from_adjacency_matrix_to_adjacency_list(adj_matrix)
+# lowring indexing of adj list to fit dijkstra algorithm
+graph = [[value - 1 for value in sublist] for sublist in temp_adj_list]
 
-weights = [
-    #       0             1         2            3               4
-    [       0,            20,        4,      float('inf'),   float('inf')], # 0
-    [       20,            0,        15,           5,         float('inf')], # 1
-    [       4,            15,       0,           1,              3      ], # 2
-    [float('inf'),        5,        1,           0,              2      ], # 3
-    [float('inf'),  float('inf'),   3,           2,              0      ]  # 4
-]
+# graph = [    
+#     [1, 2],         # 0
+#     [0, 2, 3],      # 1
+#     [0, 1, 3, 4],   # 2
+#     [1, 2, 4],      # 3
+#     [3, 2]          # 4
+# ]
+# weights = [
+#     #       0             1         2            3               4
+#     [       0,            20,        4,      float('inf'),   float('inf')], # 0
+#     [       20,            0,        15,           5,         float('inf')], # 1
+#     [       4,            15,       0,           1,              3      ], # 2
+#     [float('inf'),        5,        1,           0,              2      ], # 3
+#     [float('inf'),  float('inf'),   3,           2,              0      ]  # 4
+# ]
 
 start_vertex = 0
-lengths, predecessors = dijkstra(graph, weights, start_vertex)
+lengths, predecessors = dijkstra(graph, weight_matrix, start_vertex)
 
 paths = reconstruct_paths(predecessors, start_vertex)
 for end_vertex, path in enumerate(paths):
@@ -42,15 +44,15 @@ for end_vertex, path in enumerate(paths):
 for i, length in enumerate(lengths):
     print(f"Shortest path from node {start_vertex} to node {i} has a length of {length}")
 
-show_graph(graph, weights)
+show_graph(graph, weight_matrix)
 
 # Ad. 3
 print("\nAd. 3")
-lengths_matrix = all_pairs_shortest_paths(graph, weights)
+lengths_matrix = all_pairs_shortest_paths(graph, weight_matrix)
 df = create_full_matrix(lengths_matrix)
 center = center_of_graph(df)
 print(f"Center: {center}")
-show_graph(graph, weights)
+show_graph(graph, weight_matrix)
 
 # Ad. 4 
 print("\nAd. 4")
