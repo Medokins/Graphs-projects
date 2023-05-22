@@ -8,10 +8,7 @@ sys.path.append("..") # for running from curent directory
 from Lab3.helpers import dijkstra
 
 # Ad. 1
-def generateDigraph(node_count, probability):
-    if probability < 0 or probability > 1:
-        sys.exit("Wrong randomization arguments")
-
+def randomDigraf(node_count, probability):
     edges = []
 
     while True:
@@ -63,7 +60,33 @@ def showDigraf(adj_matrix, weights = None):
     # Wyświetlenie grafu
     plt.show()
 
+def show_weighted_graph(edges, weights):
+    G = nx.DiGraph()
 
+    # Dodaj krawędzie z wagami do grafu
+    for i, edge in enumerate(edges):
+        u, v = edge
+        weight = weights[i]
+        G.add_edge(u, v, weight=weight)
+
+    # Pobierz wagi krawędzi
+    edge_labels = nx.get_edge_attributes(G, 'weight')
+
+    # Utwórz pozycje wierzchołków dla wyświetlenia grafu
+    pos = nx.spring_layout(G)
+
+    # Wyświetl wierzchołki z numerami
+    nx.draw_networkx_nodes(G, pos, with_labels=True)
+
+    # Wyświetl krawędzie
+    nx.draw_networkx_edges(G, pos)
+
+    # Wyświetl etykiety wag krawędzi
+    nx.draw_networkx_edge_labels(G, pos, edge_labels)
+
+    # Wyświetl graf
+    plt.axis('off')
+    plt.show()
 # Ad. 2
 
 def dfs(graph, visited, stack, node):
@@ -169,36 +192,13 @@ def bellman_ford(edges, values, start):
     return dist
 
 def add_s(edges_list, edgesValues, nodesCount):
-    edgesLen = len(edges_list)
-    G_prim = copy.deepcopy(edges_list)
-    G_prim_edgesValues = copy.deepcopy(edgesValues)
-    G_prim.extend([nodesCount, index] for index in range(nodesCount))
-    G_prim_edgesValues.extend([0 for _ in range(nodesCount)])
-    return G_prim,G_prim_edgesValues
+    copied = copy.deepcopy(edges_list)
+    copiedEdgesValues = copy.deepcopy(edgesValues)
+    copied.extend([nodesCount, index] for index in range(nodesCount))
+    copiedEdgesValues.extend([0 for _ in range(nodesCount)])
+    return copied, copiedEdgesValues
 
-def johnson(edges_list, edgesValues, nodesCount):
-    edgesLen = len(edges_list)
 
-    G_prim_edges, G_prim_edgesValues = add_s(edges_list, edgesValues, nodesCount)
 
-    d = bellman_ford(G_prim_edges, G_prim_edgesValues, nodesCount)
 
-    if d.all():
-        return False
 
-    h = copy.deepcopy(d)
-    w_prim = [
-        edgesValues[i] + h[edges_list[i][0]] - h[edges_list[i][1]]
-        for i in range(edgesLen)
-    ]
-
-    D = np.zeros((nodesCount, nodesCount), dtype="int")
-
-    neighbour_list = convertEdgesToNeighborList(edges_list)
-    d_prim = [dijkstra(neighbour_list, w_prim, i)[0] for i in range(nodesCount)]
-
-    D = [ [d_prim[i][j] + h[j] - h[i] for j in range(nodesCount)] for i in range(nodesCount) ]
-
-    return D
-
-# Ad. 4

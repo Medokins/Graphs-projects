@@ -6,7 +6,7 @@ from Lab1.helpers import *
 
 # # Ad. 1
 print("Ad 1")
-randomDigrafAdjMatrix = generateDigraph(5, 0.5)
+randomDigrafAdjMatrix = randomDigraf(5, 0.5)
 print_data(randomDigrafAdjMatrix)
 showDigraf(randomDigrafAdjMatrix)
 
@@ -18,14 +18,17 @@ print(kosaraju(randomDigrafAdjMatrix))
 print("Ad 3")
 while True:
     size = 5
-    randomGraph = generateDigraph(size, 0.8)
+    randomGraph = randomDigraf(size, 0.8)
     showDigraf(randomGraph)
     isStronglyConnectedGraph = kosaraju(randomGraph)
 
     if len(isStronglyConnectedGraph) == 1:
         convertedToEdgesList = convert_to_edges(randomGraph)
+        print(convertedToEdgesList)
 
         edgesValues = [np.random.randint(-1, 10) for _ in range(len(convertedToEdgesList))]
+        print(edgesValues)
+        show_weighted_graph(convertedToEdgesList, edgesValues)
 
         res = bellman_ford(convertedToEdgesList, edgesValues, 2)
         if type(res) is not bool:
@@ -34,19 +37,19 @@ while True:
         break
 
 
-# Ad. 4
-print("Ad 4")
-while True:
-    size = 5
-    randomGraph = generateDigraph(size, 0.8)
-    showDigraf(randomGraph)
-    isStronglyConnectedGraph = kosaraju(randomGraph)
-
-    if len(isStronglyConnectedGraph) == 1:
-        convertedToEdgesList = convert_to_edges(randomGraph)
-        edgesValues = [np.random.randint(-1, 10) for _ in range(len(convertedToEdgesList))]
-
-        graph = johnson(convertedToEdgesList, edgesValues, size)
-        print(graph)
-
-        break
+# # Ad. 4
+# print("Ad 4")
+# while True:
+#     size = 5
+#     randomGraph = randomDigraf(size, 0.8)
+#     showDigraf(randomGraph)
+#     isStronglyConnectedGraph = kosaraju(randomGraph)
+#
+#     if len(isStronglyConnectedGraph) == 1:
+#         convertedToEdgesList = convert_to_edges(randomGraph)
+#         edgesValues = [np.random.randint(-1, 10) for _ in range(len(convertedToEdgesList))]
+#
+#         graph = johnson(convertedToEdgesList, edgesValues, size)
+#         print(graph)
+#
+#         break
