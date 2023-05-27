@@ -87,8 +87,8 @@ def show_weighted_graph(edges, weights):
     # Wyświetl graf
     plt.axis('off')
     plt.show()
-# Ad. 2
 
+# Ad. 2
 def dfs(graph, visited, stack, node):
     visited[node] = True
     for i in range(len(graph)):
@@ -132,7 +132,6 @@ def kosaraju(adjacency_matrix):
 
 
 # Ad. 3
-
 def convert_to_adjacency_matrix(edges):
     # Find the highest node number in the list of edges
     max_node = max(max(edge) for edge in edges)
