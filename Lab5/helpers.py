@@ -1,23 +1,25 @@
 import random
 import networkx as nx
 import matplotlib.pyplot as plt
-from collections import deque
-
 
 #Ad. 1
 def generate_random_flow_network(layers):
     G = nx.DiGraph()
 
-    source_node = (0, 0)
+    source_node = 0
     G.add_node(source_node, layer=0)
 
-    for i in range(1, layers + 1):
-        num_nodes = random.randint(2, layers)
-        for j in range(num_nodes):
-            node_name = (i, j)
-            G.add_node(node_name, layer=i)
+    node_id = 1
+    num_nodes = 0
 
-    sink_node = (layers, layers)
+    for i in range(1, layers + 1):
+        layer_nodes = random.randint(2, layers)
+        num_nodes += layer_nodes
+        for _ in range(layer_nodes):
+            G.add_node(node_id, layer=i)
+            node_id += 1
+
+    sink_node = node_id
     G.add_node(sink_node, layer=layers + 1)
 
     for i in range(layers + 1):
@@ -47,7 +49,8 @@ def generate_random_flow_network(layers):
     for u, v in G.edges:
         G.edges[u, v]['capacity'] = random.randint(1, 10)
 
-    return G
+    return G, num_nodes
+
 
 
 def draw_flow_network(G):
@@ -55,11 +58,16 @@ def draw_flow_network(G):
     capacities = nx.get_edge_attributes(G, 'capacity')
 
     nx.draw_networkx(G, pos, with_labels=True, node_color='lightblue')
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=capacities)
+
+    # to make labels readable on crossing edges
+    edge_labels = nx.draw_networkx_edge_labels(G, pos, edge_labels=capacities, label_pos=0.3)
+    for _, label in edge_labels.items():
+        label.set_bbox({'boxstyle': 'round', 'ec': 'none', 'fc': 'white'})
 
     plt.title("Losowa sieć przepływowa")
     plt.axis("off")
     plt.show()
+
 
 
 # Ad. 2
