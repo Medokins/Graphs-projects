@@ -6,30 +6,38 @@ import copy
 sys.path.append("./") # for running from root
 sys.path.append("..") # for running from curent directory
 from Lab3.helpers import dijkstra
+from Lab2.helpers import find_largest_connected_component
+from IPython.display import Image
 
 # Ad. 1
-def randomDigraf(node_count, probability):
+def convertDigraphToBasic(adj_matrix):
+    basicGraph = adj_matrix
+
+    for i in range(len(adj_matrix)):
+        for j in range(len(adj_matrix)):
+            if basicGraph[i][j] == 1:
+                basicGraph[j][i] = 1
+    return basicGraph
+
+def randomDigraf(node_count, probability, consistent = False):
     edges = []
 
     while True:
-        for i in range(0, node_count):
-            for j in range(0, node_count):
-                if i != j:
-                    rand = np.random.rand()
-
-                    if rand < probability:
-                        edges.append([i, j])
-
-        maxList = map(max, edges)
-        maxNode = max(maxList, default=-1)
-
-        if maxNode == node_count - 1:
-            break
+        for i in range(node_count):
+            for j in range(node_count):
+                if i != j and np.random.rand() < probability:
+                    edges.append([i, j])
+        
+        if len(edges) != 0:
+            basicGraph = convertDigraphToBasic(convert_to_adjacency_matrix(edges))
+            if len(basicGraph) == node_count:
+                if not consistent or len(find_largest_connected_component(basicGraph)) == node_count:
+                    break
 
         edges = []
     return convert_to_adjacency_matrix(edges)
 
-def showDigraf(adj_matrix, weights = None):
+def showDigraf(adj_matrix):
     G = nx.DiGraph()
 
     # Dodanie wierzchołków do grafu
@@ -40,10 +48,7 @@ def showDigraf(adj_matrix, weights = None):
     for i in range(len(adj_matrix)):
         for j in range(len(adj_matrix)):
             if adj_matrix[i][j] == 1:
-                if weights == None:
                     G.add_edge(i, j)
-                else:
-                    G.add_edge(i, j, weight=weights[i][j])
 
     # Ustawienie pozycji wierzchołków
     pos = nx.circular_layout(G)
@@ -53,40 +58,30 @@ def showDigraf(adj_matrix, weights = None):
     nx.draw_networkx_edges(G, pos)
     nx.draw_networkx_labels(G, pos)
 
-    # Dodanie wag do krawędzi
-    if weights != None:
-        labels = nx.get_edge_attributes(G, 'weight')
-        nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
     # Wyświetlenie grafu
     plt.show()
 
 def show_weighted_graph(edges, weights):
     G = nx.DiGraph()
 
+    numOfNodes = 0
+    for edge in edges:
+        n = max(edge[0], edge[1])
+        if numOfNodes < n:
+            numOfNodes = n
+
+    for i in range(n):
+        G.add_node(i)
+
     # Dodaj krawędzie z wagami do grafu
     for i, edge in enumerate(edges):
         u, v = edge
         weight = weights[i]
-        G.add_edge(u, v, weight=weight)
+        G.add_edge(u, v, label=weight)
 
-    # Pobierz wagi krawędzi
-    edge_labels = nx.get_edge_attributes(G, 'weight')
-
-    # Utwórz pozycje wierzchołków dla wyświetlenia grafu
-    pos = nx.spring_layout(G)
-
-    # Wyświetl wierzchołki z numerami
-    nx.draw_networkx_nodes(G, pos, with_labels=True)
-
-    # Wyświetl krawędzie
-    nx.draw_networkx_edges(G, pos)
-
-    # Wyświetl etykiety wag krawędzi
-    nx.draw_networkx_edge_labels(G, pos, edge_labels)
-
-    # Wyświetl graf
-    plt.axis('off')
-    plt.show()
+    p=nx.drawing.nx_pydot.to_pydot(G)
+    p.write_png('plot.png')
+    Image(filename='plot.png')
 
 # Ad. 2
 def dfs(graph, visited, stack, node):
@@ -196,8 +191,3 @@ def add_s(edges_list, edgesValues, nodesCount):
     copied.extend([nodesCount, index] for index in range(nodesCount))
     copiedEdgesValues.extend([0 for _ in range(nodesCount)])
     return copied, copiedEdgesValues
-
-
-
-
-
