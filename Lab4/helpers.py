@@ -5,9 +5,7 @@ import sys
 import copy
 sys.path.append("./") # for running from root
 sys.path.append("..") # for running from curent directory
-from Lab3.helpers import dijkstra
 from Lab2.helpers import find_largest_connected_component
-from IPython.display import Image
 
 # Ad. 1
 def convertDigraphToBasic(adj_matrix):
@@ -39,26 +37,20 @@ def randomDigraf(node_count, probability, consistent = False):
 
 def showDigraf(adj_matrix):
     G = nx.DiGraph()
-
-    # Dodanie wierzchołków do grafu
     for i in range(len(adj_matrix)):
         G.add_node(i)
 
-    # Dodanie krawędzi i wag do grafu
     for i in range(len(adj_matrix)):
         for j in range(len(adj_matrix)):
             if adj_matrix[i][j] == 1:
                     G.add_edge(i, j)
 
-    # Ustawienie pozycji wierzchołków
     pos = nx.circular_layout(G)
 
-    # Rysowanie grafu
     nx.draw_networkx_nodes(G, pos)
     nx.draw_networkx_edges(G, pos)
     nx.draw_networkx_labels(G, pos)
 
-    # Wyświetlenie grafu
     plt.show()
 
 def show_weighted_graph(edges, weights):
@@ -73,15 +65,19 @@ def show_weighted_graph(edges, weights):
     for i in range(n):
         G.add_node(i)
 
-    # Dodaj krawędzie z wagami do grafu
     for i, edge in enumerate(edges):
         u, v = edge
         weight = weights[i]
         G.add_edge(u, v, label=weight)
 
-    p=nx.drawing.nx_pydot.to_pydot(G)
-    p.write_png('plot.png')
-    Image(filename='plot.png')
+    pos = nx.spring_layout(G)
+    nx.draw(G, pos, with_labels=True)
+    edge_labels = nx.get_edge_attributes(G, 'label')
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
+
+    plt.savefig('plot.png')
+    plt.show()
+
 
 # Ad. 2
 def dfs(graph, visited, stack, node):
@@ -99,21 +95,17 @@ def transpose(graph):
 def kosaraju(adjacency_matrix):
     n = len(adjacency_matrix)
 
-    # Check if the adjacency matrix is square
     if n != len(adjacency_matrix[0]):
         raise ValueError("Input adjacency matrix is not square")
 
-    # Step 1: Perform depth-first search to fill the stack
     visited = [False] * n
     stack = []
     for i in range(n):
         if not visited[i]:
             dfs(adjacency_matrix, visited, stack, i)
 
-    # Step 2: Transpose the adjacency matrix
     transposed_matrix = transpose(adjacency_matrix)
 
-    # Step 3: Perform depth-first search on the transposed graph to find strongly connected components
     visited = [False] * n
     strongly_connected_components = []
     while stack:
@@ -128,13 +120,9 @@ def kosaraju(adjacency_matrix):
 
 # Ad. 3
 def convert_to_adjacency_matrix(edges):
-    # Find the highest node number in the list of edges
     max_node = max(max(edge) for edge in edges)
 
-    # Initialize a matrix filled with zeros
     adjacency_matrix = [[0] * (max_node + 1) for _ in range(max_node + 1)]
-
-    # Set the values in the adjacency matrix based on the edges
     for edge in edges:
         adjacency_matrix[edge[0]][edge[1]] = 1
 
@@ -154,12 +142,10 @@ def convertEdgesToNeighborList(edges_list):
     neighbor_dict = {}
 
     for u, v in edges_list:
-        # Add u as a neighbor of v
         if u not in neighbor_dict:
             neighbor_dict[u] = []
         neighbor_dict[u].append(v)
 
-        # Add v as a neighbor of u
         if v not in neighbor_dict:
             neighbor_dict[v] = []
         neighbor_dict[v].append(u)
