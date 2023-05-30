@@ -64,7 +64,6 @@ def draw_flow_network(G):
     for _, label in edge_labels.items():
         label.set_bbox({'boxstyle': 'round', 'ec': 'none', 'fc': 'white'})
 
-    plt.title("Losowa sieć przepływowa")
     plt.axis("off")
     plt.show()
 

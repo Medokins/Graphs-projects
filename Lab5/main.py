@@ -6,7 +6,7 @@ from Lab1.helpers import *
 import numpy as np
 
 # Ad. 1
-layers = 2
+layers = 3
 G, number_of_nodes = generate_random_flow_network(layers)
 draw_flow_network(G)
 
@@ -25,4 +25,5 @@ source = 0
 sink = number_of_nodes + 1
 # matrix generated here is incorrect, but the max_flow value is correct
 max_flow, matrix = ford_fulkerson(graph_matrix, source, sink)
-print(max_flow)
+print(matrix)
+print(f"Max flow is: {max_flow}")
