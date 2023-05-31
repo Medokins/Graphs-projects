@@ -26,31 +26,40 @@ def generate_random_flow_network(layers):
         current_layer_nodes = [node for node in G.nodes if G.nodes[node]['layer'] == i]
         next_layer_nodes = [node for node in G.nodes if G.nodes[node]['layer'] == i + 1]
 
-        for node in current_layer_nodes:
-            if next_layer_nodes:
-                target_node = random.choice(next_layer_nodes)
-                G.add_edge(node, target_node, capacity=0, flow=0)
-                next_layer_nodes.remove(target_node)
-            else:
+        while True:
+            for node in current_layer_nodes:
+                if next_layer_nodes:
+                    target_node = random.choice(next_layer_nodes)
+                    while G.has_edge(node, target_node):
+                        target_node = random.choice(next_layer_nodes)
+                    G.add_edge(node, target_node, capacity=0, flow=0)
+                else:
+                    break
+
+            # Check if every node in "i" layer has at least one outgoing edge
+            all_outgoing = all(G.out_degree[node] > 0 for node in current_layer_nodes)
+            # Check if every node in "i+1" has at least one incoming edge
+            all_incoming = all(G.in_degree[node] > 0 for node in next_layer_nodes)
+            if all_outgoing and all_incoming:
                 break
+
 
     all_nodes = list(G.nodes)
     all_nodes.remove(source_node)
     all_nodes.remove(sink_node)
 
     for _ in range(2 * layers):
-        source_node = random.choice(all_nodes)
-        target_node = random.choice(all_nodes)
-        while target_node == source_node or G.has_edge(source_node, target_node):
-            target_node = random.choice(all_nodes)
+        start_node = random.choice(all_nodes)
+        end_node = random.choice(all_nodes)
+        while end_node == start_node or G.has_edge(start_node, end_node):
+            end_node = random.choice(all_nodes)
 
-        G.add_edge(source_node, target_node, capacity=0, flow=0)
+        G.add_edge(start_node, end_node, capacity=0, flow=0)
 
     for u, v in G.edges:
         G.edges[u, v]['capacity'] = random.randint(1, 10)
 
     return G, num_nodes
-
 
 
 def draw_flow_network(G):

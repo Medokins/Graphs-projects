@@ -20,10 +20,7 @@ for edge in edges:
     column, row, weight = edge
     graph_matrix[column][row] = weight
 
-
 source = 0
 sink = number_of_nodes + 1
-# matrix generated here is incorrect, but the max_flow value is correct
 max_flow, matrix = ford_fulkerson(graph_matrix, source, sink)
-print(matrix)
 print(f"Max flow is: {max_flow}")
