@@ -1,6 +1,9 @@
 import random
 import networkx as nx
 import matplotlib.pyplot as plt
+import numpy as np
+from collections import deque
+
 
 #Ad. 1
 def generate_random_flow_network(layers):
@@ -79,20 +82,22 @@ def draw_flow_network(G):
 
 
 # Ad. 2
+# source for ford_fulkerson algorithm
+# https://www.geeksforgeeks.org/ford-fulkerson-algorithm-for-maximum-flow-problem/
 def bfs(graph, source, sink, parent):
-    visited = [False] * len(graph)
-    queue = []
+    visited = set()
+    queue = deque()
 
     queue.append(source)
-    visited[source] = True
+    visited.add(source)
 
     while queue:
-        u = queue.pop(0)
+        u = queue.popleft()
 
         for v, capacity in enumerate(graph[u]):
-            if not visited[v] and capacity > 0:
+            if v not in visited and capacity > 0:
                 queue.append(v)
-                visited[v] = True
+                visited.add(v)
                 parent[v] = u
                 if v == sink:
                     return True
@@ -100,16 +105,19 @@ def bfs(graph, source, sink, parent):
     return False
 
 
+
 def ford_fulkerson(graph, source, sink):
-    parent = [-1] * len(graph)
+    num_vertices = len(graph)
+    parent = np.empty(num_vertices, dtype=np.int32)
+    parent.fill(-1)
     max_flow = 0
 
     while bfs(graph, source, sink, parent):
-        path_flow = float("inf")
+        path_flow = np.inf
         v = sink
         while v != source:
             u = parent[v]
-            path_flow = min(path_flow, graph[u][v])
+            path_flow = min(path_flow, graph[u, v])
             v = parent[v]
 
         max_flow += path_flow
@@ -117,8 +125,8 @@ def ford_fulkerson(graph, source, sink):
         v = sink
         while v != source:
             u = parent[v]
-            graph[u][v] -= path_flow
-            graph[v][u] += path_flow
+            graph[u, v] -= path_flow
+            graph[v, u] += path_flow
             v = parent[v]
 
     return max_flow, graph
